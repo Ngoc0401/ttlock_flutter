@@ -469,22 +469,22 @@ class _LockPageState extends State<LockPage> {
         });
         break;
 
-      case Command.setLockSoundVolumeType:
-        TTLock.setLockSoundWithSoundVolume(
-            TTSoundVolumeType.fouthLevel, lockData, () {
-          _showSuccessAndDismiss("Success");
-        }, (errorCode, errorMsg) {
-          _showErrorAndDismiss(errorCode, errorMsg);
-        });
-        break;
+      // case Command.setLockSoundVolumeType:
+      //   TTLock.setLockSoundWithSoundVolume(
+      //       TTSoundVolumeType.fouthLevel, lockData, () {
+      //     _showSuccessAndDismiss("Success");
+      //   }, (errorCode, errorMsg) {
+      //     _showErrorAndDismiss(errorCode, errorMsg);
+      //   });
+      //   break;
 
-      case Command.getLockSoundVolumeType:
-        TTLock.getLockSoundWithSoundVolume(lockData, (ttLocksoundVolumeType) {
-          _showSuccessAndDismiss("sound volume type: $ttLocksoundVolumeType");
-        }, (errorCode, errorMsg) {
-          _showErrorAndDismiss(errorCode, errorMsg);
-        });
-        break;
+      // case Command.getLockSoundVolumeType:
+      //   TTLock.getLockSoundWithSoundVolume(lockData, (ttLocksoundVolumeType) {
+      //     _showSuccessAndDismiss("sound volume type: $ttLocksoundVolumeType");
+      //   }, (errorCode, errorMsg) {
+      //     _showErrorAndDismiss(errorCode, errorMsg);
+      //   });
+      //   break;
 
       case Command.addPassageMode:
         int startTime = 8 * 60; //8:00 am

@@ -1,9 +1,10 @@
 import 'package:flutter/services.dart';
+import 'package:ttlock_flutter/ttgateway.dart';
 import 'dart:convert' as convert;
-import 'ttgateway.dart';
+//import 'package:ttlock_premise_flutter/ttgateway.dart';
 
 class TTLock {
-  static bool isOnPremise = false;
+  static bool isOnPremise = true;
 
   static MethodChannel _commandChannel =
       MethodChannel("com.ttlock/command/ttlock");
@@ -279,18 +280,6 @@ class TTLock {
     invoke(COMMAND_RESET_PASSCODE, lockData, callback, fail: failedCallback);
   }
 
-  // ignore: slash_for_doc_comments
-/**
- * Get addmin passcode from lock 
- * 
- * lockData The lock data string used to operate lock
- */
-  static void getAdminPasscode(String lockData,
-      TTGetAdminPasscodeCallback callback, TTFailedCallback failedCallback) {
-    invoke(COMMAND_GET_ADMIN_PASSCODE, lockData, callback,
-        fail: failedCallback);
-  }
-
   static void setErasePasscode(String erasePasscode, String lockData,
       TTSuccessCallback callback, TTFailedCallback failedCallback) {
     Map map = new Map();
@@ -449,6 +438,7 @@ class TTLock {
     invoke(COMMAND_RECOVER_CARD, map, callback, fail: failedCallback);
   }
 
+// thêm
   static void reportLossCard(String cardNumber, String lockData,
       TTSuccessCallback callback, TTFailedCallback failedCallback) {
     Map map = Map();
@@ -456,6 +446,8 @@ class TTLock {
     map[TTResponse.lockData] = lockData;
     invoke(COMMAND_REPORT_LOSS_CARD, map, callback, fail: failedCallback);
   }
+
+// thêm
 
 // ignore: slash_for_doc_comments
 /**
@@ -553,11 +545,14 @@ class TTLock {
         fail: failedCallback);
   }
 
+//thêm
   static void getPasscodeVerificationParams(String lockData,
       TTLockDataCallback callback, TTFailedCallback failedCallback) {
     invoke(COMMAND_GET_PASSCODE_VERIFICATION_PARAMS, lockData, callback,
         fail: failedCallback);
   }
+
+// thêm
 
 // ignore: slash_for_doc_comments
 /**
@@ -567,7 +562,7 @@ class TTLock {
  * lockData The lock data string used to operate lock
  */
   static void modifyAdminPasscode(String adminPasscode, String lockData,
-      TTSuccessCallback callback, TTFailedCallback failedCallback) {
+      TTLockDataCallback callback, TTFailedCallback failedCallback) {
     Map map = Map();
     map[TTResponse.adminPasscode] = adminPasscode;
     map[TTResponse.lockData] = lockData;
@@ -808,6 +803,23 @@ class TTLock {
         fail: failedCallback);
   }
 
+  static void removeCallBack(String command) {
+    //COMMAND_CONTROL_LOCK
+    int index = -1;
+    for (var i = 0; i < _commandQueue.length; i++) {
+      Map map = _commandQueue[i];
+      String key = map.keys.first;
+      if (key.compareTo(command) == 0) {
+        index = i;
+        break;
+      }
+    }
+    if (index > -1) {
+      _commandQueue.removeAt(index);
+    }
+  }
+
+// thêm
   static void setLockNbAddress(
       String ip,
       String port,
@@ -821,60 +833,62 @@ class TTLock {
     invoke(COMMAND_SET_NB_ADDRESS, map, callback, fail: failedCallback);
   }
 
-  // static void setNbAwakeModes(List<TTNbAwakeMode> modes, String lockData,
-  //     TTSuccessCallback callback, TTFailedCallback failedCallback) {
-  //   List list = [];
-  //   modes.forEach((element) {
-  //     list.add(element.index);
-  //   });
+  static void setNbAwakeModes(List<TTNbAwakeMode> modes, String lockData,
+      TTSuccessCallback callback, TTFailedCallback failedCallback) {
+    List list = [];
+    modes.forEach((element) {
+      list.add(element.index);
+    });
 
-  //   Map map = Map();
-  //   map[TTResponse.nbAwakeModes] = list;
-  //   map[TTResponse.lockData] = lockData;
-  //   invoke(COMMAND_SET_NB_AWAKE_MODES, map, callback, fail: failedCallback);
-  // }
+    Map map = Map();
+    map[TTResponse.nbAwakeModes] = list;
+    map[TTResponse.lockData] = lockData;
+    invoke(COMMAND_SET_NB_AWAKE_MODES, map, callback, fail: failedCallback);
+  }
 
-  // static void getNbAwakeModes(String lockData,
-  //     TTGetNbAwakeModesCallback callback, TTFailedCallback failedCallback) {
-  //   invoke(COMMAND_GET_NB_AWAKE_MODES, lockData, callback,
-  //       fail: failedCallback);
-  // }
+  static void getNbAwakeModes(String lockData,
+      TTGetNbAwakeModesCallback callback, TTFailedCallback failedCallback) {
+    invoke(COMMAND_GET_NB_AWAKE_MODES, lockData, callback,
+        fail: failedCallback);
+  }
 
-  // static void setNbAwakeTimes(List<TTNbAwakeTimeModel> times, String lockData,
-  //     TTSuccessCallback callback, TTFailedCallback failedCallback) {
-  //   List list = [];
-  //   times.forEach((element) {
-  //     Map nbAwakeTimeMap = new Map();
-  //     nbAwakeTimeMap[TTResponse.minutes] = element.minutes;
-  //     nbAwakeTimeMap[TTResponse.type] = element.type.index;
-  //     list.add(nbAwakeTimeMap);
-  //   });
+  static void setNbAwakeTimes(List<TTNbAwakeTimeModel> times, String lockData,
+      TTSuccessCallback callback, TTFailedCallback failedCallback) {
+    List list = [];
+    times.forEach((element) {
+      Map nbAwakeTimeMap = new Map();
+      nbAwakeTimeMap[TTResponse.minutes] = element.minutes;
+      nbAwakeTimeMap[TTResponse.type] = element.type.index;
+      list.add(nbAwakeTimeMap);
+    });
 
-  //   Map map = Map();
-  //   map[TTResponse.nbAwakeTimeList] = list;
-  //   map[TTResponse.lockData] = lockData;
-  //   invoke(COMMAND_SET_NB_AWAKE_TIMES, map, callback, fail: failedCallback);
-  // }
+    Map map = Map();
+    map[TTResponse.nbAwakeTimeList] = list;
+    map[TTResponse.lockData] = lockData;
+    invoke(COMMAND_SET_NB_AWAKE_TIMES, map, callback, fail: failedCallback);
+  }
 
-  // static void getNBAwakeTimes(String lockData,
-  //     TTGetNbAwakeTimesCallback callback, TTFailedCallback failedCallback) {
-  //   invoke(COMMAND_GET_NB_AWAKE_TIMES, lockData, callback,
-  //       fail: failedCallback);
-  // }
+  static void getNBAwakeTimes(String lockData,
+      TTGetNbAwakeTimesCallback callback, TTFailedCallback failedCallback) {
+    invoke(COMMAND_GET_NB_AWAKE_TIMES, lockData, callback,
+        fail: failedCallback);
+  }
 
-  // static void setDoorSensorLockingSwitchState(bool isOn, String lockData,
-  //     TTSuccessCallback callback, TTFailedCallback failedCallback) {
-  //   Map map = Map();
-  //   map[TTResponse.isOn] = isOn;
-  //   map[TTResponse.lockData] = lockData;
-  //   invoke(COMMAND_SET_DOOR_SENSOR_SWITCH, map, callback, fail: failedCallback);
-  // }
+  static void setDoorSensorLockingSwitchState(bool isOn, String lockData,
+      TTSuccessCallback callback, TTFailedCallback failedCallback) {
+    Map map = Map();
+    map[TTResponse.isOn] = isOn;
+    map[TTResponse.lockData] = lockData;
+    invoke(COMMAND_SET_DOOR_SENSOR_SWITCH, map, callback, fail: failedCallback);
+  }
 
-  // static void getDoorSensorLockingSwitchState(String lockData,
-  //     TTGetSwitchStateCallback callback, TTFailedCallback failedCallback) {
-  //   invoke(COMMAND_GET_DOOR_SENSOR_SWITCH, lockData, callback,
-  //       fail: failedCallback);
-  // }
+  static void getDoorSensorLockingSwitchState(String lockData,
+      TTGetSwitchStateCallback callback, TTFailedCallback failedCallback) {
+    invoke(COMMAND_GET_DOOR_SENSOR_SWITCH, lockData, callback,
+        fail: failedCallback);
+  }
+
+  // thêm
 
   static void setHotel(
       String hotelInfo,
@@ -899,11 +913,13 @@ class TTLock {
     invoke(COMMAND_SET_HOTEL_CARD_SECTOR, map, callback, fail: failedCallback);
   }
 
-  // static void getDoorSensorState(String lockData,
-  //     TTGetSwitchStateCallback callback, TTFailedCallback failedCallback) {
-  //   invoke(COMMAND_GET_DOOR_SENSOR_STATE, lockData, callback,
-  //       fail: failedCallback);
-  // }
+// thêm
+  static void getDoorSensorState(String lockData,
+      TTGetSwitchStateCallback callback, TTFailedCallback failedCallback) {
+    invoke(COMMAND_GET_DOOR_SENSOR_STATE, lockData, callback,
+        fail: failedCallback);
+  }
+// thêm
 
   static void getLockVersion(String lockMac, TTGetLockVersionCallback callback,
       TTFailedCallback failedCallback) {
@@ -980,10 +996,11 @@ class TTLock {
   //   invoke(COMMAND_SET_NB_SERVER_INFO, map, callback, fail: failedCallback);
   // }
 
-  // static void getAdminPasscode(String lockData, TTGetAdminPasscodeCallback callback, TTFailedCallback failedCallback) {
-  //   invoke(COMMAND_GET_ADMIN_PASSCODE, lockData, callback,
-  //       fail: failedCallback);
-  // }
+  static void getAdminPasscode(String lockData,
+      TTGetAdminPasscodeCallback callback, TTFailedCallback failedCallback) {
+    invoke(COMMAND_GET_ADMIN_PASSCODE, lockData, callback,
+        fail: failedCallback);
+  }
   //
   // static void getLockSystemInfo(String lockData, TTGetLockSystemInfoCallback callback, TTFailedCallback failedCallback) {
   //   invoke(COMMAND_GET_LOCK_SYSTEM_INFO, lockData, callback,
@@ -1257,11 +1274,6 @@ class TTLock {
           list.add(model);
         });
         getNbAwakeTimesCallback(list);
-        break;
-
-      case COMMAND_GET_ADMIN_PASSCODE:
-        TTGetAdminPasscodeCallback getAdminPasscodeCallback = callBack;
-        getAdminPasscodeCallback(data[TTResponse.adminPasscode]);
         break;
       case COMMAND_GET_LOCK_VERSION:
         TTGetLockVersionCallback getLockVersionCallback = callBack;

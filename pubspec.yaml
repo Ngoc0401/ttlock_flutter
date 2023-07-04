@@ -8,18 +8,32 @@ environment:
   flutter: ">=1.17.5"
 
 dependencies:
+ 
   flutter:
     sdk: flutter
+  flutter_vlc_player: ^6.0.5
+  #ttlock_flutter: ^0.2.0
+  
+
+  #flutter_bloc: ^8.0.1
+  
+  
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+    
+ 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
+
+ 
   # This section identifies this Flutter project as a plugin project.
   # The 'pluginClass' and Android 'package' identifiers should not ordinarily
   # be modified. They are used by the tooling to maintain consistency when
@@ -32,4 +46,18 @@ flutter:
       ios:
         pluginClass: TtlockFlutterPlugin
 
+  
+ 
+  # assets:
+  # uses-material-design: true,
+  #   - assets/images/
+  #   - assets/images/k.jpg
+
+
+    
+   
+  
 #发布 更新插件  https://blog.csdn.net/m0_37714581/article/details/100162272
+
+
+
